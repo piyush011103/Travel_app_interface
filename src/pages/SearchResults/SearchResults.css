@@ -1,0 +1,6 @@
+.search-details{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 20rem;
+    border-radius: 4px;
+  }
