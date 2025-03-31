@@ -12,7 +12,7 @@ export const SingleHotel = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await axios.get(`http://localhost:3500/api/hotels/${id}`);
+        const data = await axios.get(`https://travel-app-backend-umpr.onrender.com/api/hotels/${id}`);
         setSingleHotel(data.data);
       } catch (err) {
         console.log(err);

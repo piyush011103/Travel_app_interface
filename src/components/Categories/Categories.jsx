@@ -16,7 +16,7 @@ export const Categories = () => {
     useEffect(() => {
         (async () => {
             try{
-                const {data} = await axios.get("http://localhost:3500/api/category")
+                const {data} = await axios.get("https://travel-app-backend-umpr.onrender.com/api/category")
                 const categoriesToShow = data.slice(numberOfCategoryToShow + 10 > data.length ? data.length - 10 : numberOfCategoryToShow, numberOfCategoryToShow > data.length ? data.length : numberOfCategoryToShow + 12);
                 setCategories(categoriesToShow)
             }catch(err){

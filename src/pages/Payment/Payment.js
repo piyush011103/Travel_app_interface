@@ -21,7 +21,7 @@ export const Payment = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3500/api/hotels/${id}`);
+                const response = await axios.get(`https://travel-app-backend-umpr.onrender.com/api/hotels/${id}`);
                 setSingleHotel(response.data);
             } catch (err) {
                 console.error("API error:", err);
