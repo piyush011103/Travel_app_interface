@@ -28,11 +28,11 @@ export function HotelCard ({hotel}){
                     </p>
                 </div>
             </div>
-            <div className='wishlist'>
+            {/* <div className='wishlist'>
                 <button className='button btn-wishlist absolute'>
                 <span class="material-icons favourite cursor">favorite</span>
                 </button>
-            </div>
+            </div> */}
         </div>
     )
 }

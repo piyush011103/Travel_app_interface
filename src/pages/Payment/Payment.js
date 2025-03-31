@@ -1,77 +1,70 @@
-import { Fragment, useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import { useDate } from "../../Context"
-import "./Payment.css"
-import axios from "axios"
+import { Fragment, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useDate } from "../../Context";
+import "./Payment.css";
+import axios from "axios";
 
 export const Payment = () => {
+    const { id } = useParams();
+    const { guests, checkinDate, checkoutDate } = useDate();
 
-    const params = useParams();
-    const {id} = params;
+    // Convert to Date objects to prevent errors
+    const checkInDate = checkinDate ? new Date(checkinDate) : null;
+    const checkOutDate = checkoutDate ? new Date(checkoutDate) : null;
 
-    const {guests, dateDispatch, checkinDate, checkoutDate} = useDate()
-    const numberOfNights = checkinDate && checkoutDate ? (checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 3600 * 24) : 0
+    // Hotel state
+    const [singleHotel, setSingleHotel] = useState(null);
+    const [totalPayableAmount, setTotalPayableAmount] = useState(0);
+    const [numberOfNights, setNumberOfNights] = useState(1); // Default to 1 night
 
-    const [singleHotel, setSingleHotel] = useState();
-
+    // Fetch hotel details
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const data = await axios.get(`http://localhost:3500/api/hotels/${id}`);
-            console.log('API response:', data);
-            setSingleHotel(data);
-          } catch (err) {
-            console.log('API error:', err);
-          }
+            try {
+                const response = await axios.get(`http://localhost:3500/api/hotels/${id}`);
+                setSingleHotel(response.data);
+            } catch (err) {
+                console.error("API error:", err);
+            }
         };
-      
         fetchData();
-      }, [id]);
-      
-      if (!singleHotel) return <div>Loading...</div>;
-      
-      console.log('singleHotel:', singleHotel);
-      
-      const { data: { image, name, address, state, rating, price } } = singleHotel;
-      
-      console.log('image:', image);
-      console.log('name:', name);
-      console.log('address:', address);
-      console.log('state:', state);
-      console.log('rating:', rating);
-      console.log('price:', price);
-      
-  const totalPayableAmount = price * numberOfNights + 150
+    }, [id]);
+
+    // Update number of nights and total price when dates change
+    useEffect(() => {
+        if (checkInDate instanceof Date && checkOutDate instanceof Date && singleHotel) {
+            const nights = Math.max(1, (checkOutDate - checkInDate) / (1000 * 3600 * 24));
+            setNumberOfNights(nights);
+            setTotalPayableAmount(singleHotel.price * nights + 150);
+        }
+    }, [checkInDate, checkOutDate, singleHotel]);
+
+    if (!singleHotel) return <div>Loading...</div>;
+
+    const { image, name, address, state, rating, price } = singleHotel;
 
     return (
         <Fragment>
             <header className="heading">
                 <h1 className="heading-1">
-                    <Link className="link" to="/">TravelO</Link>
+                    <Link className="link" to="/">BreezeTravel</Link>
                 </h1>
             </header>
             <main className="main d-flex justify-center">
                 <div className="final-details-container d-flex direction-column gap-larger">
                     <h2>Trip Details</h2>
                     <div className="dates-and-guests d-flex direction-column gap-md">
-                        {
-                            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_PJCpWNEqRuKmWu" async> </script> </form>
-                        }
                         <h3>Your Trip</h3>
                         <div>
                             <p>Dates</p>
                             <span>
-                                <span>
-                                    {checkinDate?.toLocaleDateString("en-US", {
-                                        day: "numeric", 
-                                        month:"short"
-                                    })}{" "}
-                                    -
-                                    {checkoutDate?.toLocaleDateString("en-US", {
-                                        day: "numeric", 
-                                        month:"short"
-                                    })}
-                                </span>
+                                {checkInDate
+                                    ? checkInDate.toLocaleDateString("en-US", { day: "numeric", month: "short" })
+                                    : "Select Date"}{" "}
+                                -
+                                {checkOutDate
+                                    ? checkOutDate.toLocaleDateString("en-US", { day: "numeric", month: "short" })
+                                    : "Select Date"}
                             </span>
                         </div>
                         <div>
@@ -79,17 +72,13 @@ export const Payment = () => {
                             <span>{guests} guests</span>
                         </div>
                     </div>
-                    <div className="d-flex direction-column gap-sm">
-                        <h3>Pay with</h3>
-                        <div>Razorpay</div>
-                    </div>
                     <button className="button btn-primary btn-reserve cursor btn-pay">
                         Confirm Booking
                     </button>
                 </div>
                 <div className="final-details d-flex direction-column gap-large">
                     <div className="gap-sm">
-                        <img className="image" src={image} alt={name}/>
+                        <img className="image" src={image} alt={name} />
                         <div className="direction-column">
                             <div className="d-flex direction-column grow-shrink-basis">
                                 <span>{name}</span>
@@ -103,7 +92,7 @@ export const Payment = () => {
                             </div>
                         </div>
                         <div className="tag">
-                            Your Booking is Protected by <strong className="strong">TravelO</strong>
+                            Your Booking is Protected by <strong className="strong">Breeze Travel</strong>
                         </div>
                         <div className="price-details-container">
                             <div className="price-distribution d-flex direction-column">
@@ -126,5 +115,5 @@ export const Payment = () => {
                 </div>
             </main>
         </Fragment>
-    )
-}
+    );
+};
