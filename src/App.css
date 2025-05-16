@@ -6,10 +6,10 @@
 
 :root {
   --background-color: #fafafa;
-  --primary-color: #ff6525;
-  --text-color-primary: #363030;
-  --accent-color: #d2d2d2;
-  --container-border-color: #707070;
+  --primary-color: orangered;
+  --text-color-primary: rgb(44, 40, 40);
+  --accent-color: rgb(167, 166, 166);
+  --container-border-color: grey;
   --overlay: rgba(0, 0, 0, 0.3);
 }
 

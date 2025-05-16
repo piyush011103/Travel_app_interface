@@ -1,5 +1,5 @@
 .heading{
-    background-color: var(--background-color);
+    /* background-color: orange; */
     padding: 8px 3rem;
     border-bottom: 1px solid var(--accent-color);
     justify-content: space-between;
@@ -7,6 +7,11 @@
     z-index: 2;
     width: 100%;
 }
+
+/* .link{
+    color: black;
+    background-color: aqua;
+} */
 
 .heading-1 {
     font-size: 1.75rem;
